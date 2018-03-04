@@ -1,0 +1,203 @@
+<!--Hack for Humanity 2018-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link href="css/style.css" rel="stylesheet">
+    <title>SCU Evacuation Map</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+    </style>
+    <script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+  </head>
+  <body onload="start()">
+      <header>
+          SCU Natural Disaster Reaction Website
+      </header>   
+      
+      <div class="container">
+      <div class="nav-bar">
+        <i class="fas fa-bars" onclick="showMenu()"></i>
+      </div>
+      <div class="nav"></div>
+
+      <div class="info-container">
+        <h1>Information Container</h1>
+        <div class="info"></div>
+      </div>
+    </div>
+      
+    <script>
+        let nav = document.getElementsByClassName("nav")[0],
+        info = document.getElementsByClassName("info")[0]
+
+    function showMenu() {
+      console.log("I'M BEING CLICKED!!!")
+      nav.classList.toggle("nav-open")
+
+      let infoContainer = document.getElementsByClassName("info-container")[0]
+      infoContainer.classList.toggle("info-background")
+    }
+
+
+    let PDFInfo = [
+      {
+        id: "Fire",
+        content: "PULL FIRE ALARM. EVACUATE. Keep low and cover your face. TEST exit doors for heat, if hot DO NOT OPEN and use alternate route. Close doors behind you. DO NOT LOCK"
+      }, {
+        id: "Hazardous Materials",
+        content: "Contact Campus Safety at 408‐554‐4444 (x4444) to report type and location of spill. ASSIST CONTAMINATED VICTIMS to a safety shower/eyewash. Use personal protective equipment to avoid contact. As needed, notify others in the vicinity to evacuate. If needed, pull fire alarm to evacuate the building—evacuate upwind/uphill to a safe location"
+      },
+      {
+        id: "Earthquake",
+          content: "IF INDOORS: DROP, COVER and HOLD.DROP to the ground; take COVER under a sturdy table or desk and HOLD on until the shaking stops. Is there is no table or desk nearby cover your face and head with arms and crouch in an inside corner of the building. Minimize your movements and stay where you are until the shaking has stopped and you are sure exiting is safe. Stay away from glass, windows, outside doors and walls. Also avoid internal items that could fall or shiŌ like light fixtures and furniture. DO NOT exit until the shaking subsides. DO NOT use elevators. NOTE—Electricity may go out and sprinkler system or fire alarms may activate. IF OUTDOORS: Remain outdoors and move away from any buildings, streetlights and utility wires •Get low to the ground and stay there until shaking stops. NOTE—The greatest danger is directly outside building at exits and along exterior walls."
+      }
+    ]
+
+    PDFInfo.forEach(element => {
+      let navOption = document.createElement("span")
+      navOption.className = "nav-option"
+      navOption.innerHTML = element.id
+      nav.appendChild(navOption)
+
+
+      navOption.addEventListener('click', () => {
+        info.innerHTML = element.content
+      })
+    })
+        
+        
+        
+        
+      //variables
+      var oriLati, oriLong, destLati, destLong; //origin latitude and longitude and destination latitude and longitude
+        
+      //onload function
+      function start(){
+        compareLocation();
+        setTimeout('initMap();', 5000);
+      }
+      
+      //THIS SECTION DETERMINES LOCATION AND DESTINATION
+      function compareLocation(){
+        navigator.geolocation.getCurrentPosition(success, error, options);
+      }
+
+      var options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+      }
+
+      function success(pos){
+          oriLati= pos.coords.latitude;
+          oriLong=pos.coords.longitude;
+          document.getElementById("oriLatitude").innerHTML=oriLati;
+          document.getElementById("oriLongitude").innerHTML=oriLong;
+          //Locatelli
+          if (pos.coords.latitude<=37.35&&pos.coords.latitude>=37.34 && pos.coords.longitude<=-121.935023&&pos.coords.longitude>=-121.942){
+              document.getElementById("specificLocation").innerHTML="You're at Locatelli.";
+              destLati=37.350089;
+              destLong=-121.934913;
+          }
+          //Nobili
+          else if (pos.coords.latitude>=37.348&&pos.coords.latitude<=37.350 && pos.coords.longitude<=-121.935&&pos.coords.longitude>=-121.945){
+              document.getElementById("specificLocation").innerHTML="You're at Nobili.";
+              destLati=37.349268;
+              destLong=-121.942236;
+          }
+          //Benson
+          else if (pos.coords.latitude>=37.348025&&pos.coords.latitude<=37.347231 && pos.coords.longitude<=-121.938994&&pos.coords.longitude>=-121.939965){
+              document.getElementById("specificLocation").innerHTML="You're at Benson.";
+              destLati=37.348115;
+              destLong=-121.939724;
+          }
+          //Gym
+          else if (pos.coords.latitude>=37.349&&pos.coords.latitude<=37.348 && pos.coords.longitude<=-121.936&&pos.coords.longitude>=-121.938){
+              document.getElementById("specificLocation").innerHTML="You're at Malley Fitness Center.";
+              destLati=37.348404;
+              destLong=-121.936234;
+          }
+          //no other option
+          else{
+              document.getElementById("specificLocation").innerHTML="Location unknown.";
+          }
+          document.getElementById("destLatitude").innerHTML=destLati;
+          document.getElementById("destLongitude").innerHTML=destLong;
+      }
+
+      function error(err) {
+          console.warn(`ERROR(${err.code}): ${err.message}`);
+      }
+        
+      //THIS SECTION DISPLAYS THE MAP    
+      function initMap() {
+          var directionsService = new google.maps.DirectionsService;
+          var directionsDisplay = new google.maps.DirectionsRenderer;
+          var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 17,
+          center: {lat: 37.3496418, lng: -121.9389875} //start map out in the GPS coordinates for SCU by default
+        });
+        directionsDisplay.setMap(map);
+        calculateAndDisplayRoute(directionsService, directionsDisplay);
+      }
+        
+      function calculateAndDisplayRoute(directionsService, directionsDisplay) {
+          directionsService.route({
+              origin: {lat: oriLati, lng: oriLong},       //Coordinates of user should go here
+              destination: {lat:destLati, lng: destLong},   //Coordinates of evacuation point
+              travelMode: 'WALKING'
+          }, function(response, status) {
+          if (status === 'OK') {
+            directionsDisplay.setDirections(response);
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+          });
+      }
+    </script>
+      
+    <!--LOCATION INFO SECTION-->
+    <p>Click the button if you changed your location.</p>
+    <button onclick="start()">Remap</button><br><br>
+    <span>Location:</span><span id="specificLocation"></span><br><br>
+    <span>Origin Latitude:</span><span id="oriLatitude"></span><br><br>
+    <span>Origin Longtitude:</span><span id="oriLongitude"></span><br><br>
+    <span>Destination Latitude:</span><span id="destLatitude"></span><br><br>
+    <span>Destination Longtitude:</span><span id="destLongitude"></span><br>
+    <h3><center>SCU Evacuation Map:</center></h3>
+    <div id="map"></div>
+      
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPEYpDenYedMQpXX5Rm6JY3lSu5Tgx7BY&callback=initMap">
+    </script>
+      
+    <footer>
+        <span class="locations">Locations covered in this implementation: Locatelli, Nobili, Malley, and Benson.</span>
+    </footer>
+  </body>
+</html> 

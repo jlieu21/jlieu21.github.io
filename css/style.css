@@ -1,0 +1,149 @@
+body {
+  overflow-x: hidden;
+  font-family: 'Roboto Slab', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: ghostwhite;
+}
+
+header{
+  font-size: 22px;
+  font-style: italic;
+  line-height: 22px;
+  margin-bottom: 25px;
+  font-family: 'Droid Serif', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    
+  text-align: center;
+  color: black;
+  background-image: url("../img/headerBackground.jpg");
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  background-position: center center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.text-primary {
+  color: #fed136 !important;
+}
+
+h1,
+h2,
+h3 {
+    font-weight: 300;
+    font-family: 'Roboto Slab', 'Helvetica Neue';
+}
+h4,
+h5,
+h6 {
+  font-weight: 700;
+  font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+footer {
+  padding: 25px 0;
+  text-align: center;
+}
+
+footer span.locations {
+  font-size: 90%;
+  line-height: 40px;
+  text-transform: none;
+  font-family: 'Montserrat', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+* {
+      margin: 0;
+      padding: 0;
+      font-family: sans-serif;
+    }
+
+    .fa-bars {
+      padding: 10px;
+    }
+
+    .fa-bars:hover {
+      cursor: pointer;
+    }
+
+    .info-background {
+      filter: blur(5px);
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      transform: translateX(-100%);
+      transition: 0.6s;
+      position: absolute;
+      margin-top: 20px;
+      background: white;
+    }
+
+    .nav-option {
+      border: 1px solid black;
+      width: 150px;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 5px;
+    }
+
+    .nav-open {
+      transform: translateX(0px);
+    }
+
+    .nav-option:hover {
+      cursor: pointer;
+      background: black;
+      color: white;
+    }
+
+    .info-container {
+        
+    }
+
+    .info{
+        border: 1px solid black;
+    }
+  </style>
+
+  <script>
+    let nav = document.getElementsByClassName("nav")[0],
+        info = document.getElementsByClassName("info")[0]
+
+    function showMenu() {
+      console.log("I'M BEING CLICKED!!!")
+      nav.classList.toggle("nav-open")
+
+      let infoContainer = document.getElementsByClassName("info-container")[0]
+      infoContainer.classList.toggle("info-background")
+    }
+
+
+    let PDFInfo = [
+      {
+        id: "Fire",
+        content: "Fight fire with BIGGER fire"
+      }, {
+        id: "Hazardous Materials",
+        content: "Contact Campus Safety at 408‐554‐4444 (x4444) to report type and location of spill. ASSIST CONTAMINATED VICTIMS to a safety shower/eyewash. Use personal protective equipment to avoid contact. As needed, notify others in the vicinity to evacuate. If needed, pull fire alarm to evacuate the building—evacuate upwind/uphill to a safe location"
+      },
+      {
+        id: "Earthquake"
+        content: "Ahh"
+      }
+    ]
+
+    PDFInfo.forEach(element => {
+      let navOption = document.createElement("span")
+      navOption.className = "nav-option"
+      navOption.innerHTML = element.id
+      nav.appendChild(navOption)
+
+
+      navOption.addEventListener('click', () => {
+        info.innerHTML = element.content
+        let openNav = document.getElementsByClassName("nav-open")[0]
+        openNav.classList.remove("nav-open")
+      })
+    })
